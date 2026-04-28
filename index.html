@@ -2,11 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>TSUNO | HORN GENERATOR</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
 
+  /* リセット & 基本設定 */
   * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
   :root {
     --bg-white: #ffffff;
@@ -39,21 +40,27 @@
     white-space: nowrap;
   }
 
-  /* ── START SCREEN ── */
+  /* ── START SCREEN (スマホ最適化) ── */
   #intro-page {
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
-    padding: 20px;
+    padding: 0 20px;
   }
-  .intro-logo { font-size: clamp(24px, 8vw, 32px); margin-bottom: 15px; }
+  /* ロゴサイズを画面幅に合わせて可変化 (最小18px, 推奨7vw, 最大32px) */
+  .intro-logo { 
+    font-size: clamp(18px, 7vw, 32px); 
+    margin-bottom: 15px; 
+    width: 100%;
+    overflow: hidden;
+  }
   .intro-subtitle {
     font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em;
     margin-bottom: 35px;
   }
   
   .btn-ui-main {
-    padding: 18px 40px;
+    padding: 18px 50px;
     background: var(--text-black); border: none;
     color: #fff; cursor: pointer; 
     font-family: var(--font-ui);
@@ -72,7 +79,7 @@
 
   .header-logo {
     position: absolute; top: 20px; left: 20px; z-index: 200;
-    font-size: clamp(10px, 3vw, 14px);
+    font-size: clamp(10px, 2.5vw, 14px);
   }
 
   .download-area {
@@ -84,9 +91,9 @@
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: 0.3s;
   }
-  .btn-dl-minimal svg { width: 20px; height: 20px; fill: none; stroke: var(--text-black); stroke-width: 1.3; }
+  .btn-dl-minimal svg { width: 22px; height: 22px; fill: none; stroke: var(--text-black); stroke-width: 1.3; }
 
-  /* STEP PANEL */
+  /* STEP PANEL (レスポンシブ調整) */
   #step-panel {
     height: 260px; background: var(--panel-bg);
     border-top: 1px solid var(--border);
@@ -98,7 +105,8 @@
 
   .step-nav {
     display: flex; align-items: center; justify-content: center;
-    gap: 20px; width: 100%; max-width: 850px;
+    gap: 20px; /* スマホでは狭める */
+    width: 100%; max-width: 850px;
   }
   .nav-arrow {
     width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd;
@@ -137,17 +145,27 @@
   .color-picker-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
+  /* Regenerateボタン スマホ最適化 */
   .finish-area { 
-    margin-top: 15px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    position: fixed;
+    bottom: 15px; /* スマホではより下へ */
+    right: 15px;
+    z-index: 1000;
+  }
+  .btn-regen-mobile {
+    padding: 10px 22px;
+    font-size: 9px;
   }
 
-  /* パソコンで見るときだけ、REGENERATEを右下に固定 */
+  /* PC向けメディアクエリ (PC版の配置を上書き復元) */
   @media (min-width: 800px) {
+    .step-nav { gap: 70px; }
+    .nav-arrow { width: 54px; height: 54px; font-size: 18px; }
+    #step-panel { padding-top: 22px; height: 280px; }
     .finish-area { position: absolute; bottom: 35px; right: 40px; width: auto; }
-    #step-panel { padding-top: 22px; }
+    .btn-regen-mobile { padding: 14px 44px; font-size: 10px; }
+    .header-logo { top: 25px; left: 30px; }
+    .download-area { top: 25px; right: 40px; }
   }
 </style>
 </head>
@@ -230,7 +248,7 @@
     </div>
 
     <div class="finish-area">
-      <button class="btn-ui-main" onclick="newDNA()" style="padding: 12px 30px; font-size: 10px;">Regenerate</button>
+      <button class="btn-ui-main btn-regen-mobile" onclick="newDNA()">Regenerate</button>
     </div>
   </div>
 </div>
@@ -297,7 +315,7 @@ function initThree() {
   camera.position.set(0, 5, 15);
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(c.clientWidth, c.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   document.getElementById("three-canvas").appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -311,8 +329,8 @@ function initThree() {
 
 function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale = 1.0, bId = 0) {
   const points = [];
-  const segments = 80;
-  const radialSegments = 32;
+  const segments = 60; // スマホ負荷軽減
+  const radialSegments = 24;
   const len = settings.size * 1.5 * scale;
   const bS = settings.bend * 0.4;
   for (let i = 0; i <= 10; i++) {
@@ -327,7 +345,7 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
 
   for (let i = 0; i <= segments; i++) {
     const t = i/segments;
-    const bump = 1 + (Math.sin(t*30)*0.5 + (dna.noise[i]-0.5))*(settings.bump*0.04)*(1-t);
+    const bump = 1 + (Math.sin(t*30)*0.5 + (dna.noise[i%120]-0.5))*(settings.bump*0.04)*(1-t);
     const r = baseR * Math.pow(1-t,0.9)*bump;
     const p = curve.getPointAt(t);
     const n = frames.normals[i], b = frames.binormals[i];
@@ -344,14 +362,6 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
       indices.push(a, b, d, b, c, d);
     }
   }
-  const botIdx = vertices.length/3;
-  const ps = curve.getPointAt(0); vertices.push(ps.x, ps.y, ps.z);
-  for (let j = 0; j < radialSegments; j++) indices.push(botIdx, j+1, j);
-  const topIdx = vertices.length/3;
-  const pe = curve.getPointAt(1); vertices.push(pe.x, pe.y, pe.z);
-  const lastRing = segments*(radialSegments+1);
-  for (let j = 0; j < radialSegments; j++) indices.push(topIdx, lastRing+j, lastRing+j+1);
-
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geo.setIndex(indices);
@@ -393,8 +403,7 @@ function animate() {
 
 document.getElementById('palette').onclick = (e) => {
   if (e.target.classList.contains('color-dot')) {
-    const activeDot = document.querySelector('.color-dot.active');
-    if (activeDot) activeDot.classList.remove('active');
+    document.querySelector('.color-dot.active')?.classList.remove('active');
     e.target.classList.add('active');
     settings.color = e.target.dataset.color;
     updateModel();
@@ -402,8 +411,7 @@ document.getElementById('palette').onclick = (e) => {
 };
 
 document.getElementById('custom-color').oninput = (e) => {
-  const activeDot = document.querySelector('.color-dot.active');
-  if (activeDot) activeDot.classList.remove('active');
+  document.querySelector('.color-dot.active')?.classList.remove('active');
   settings.color = e.target.value;
   updateModel();
 };
