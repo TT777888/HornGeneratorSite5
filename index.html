@@ -44,10 +44,19 @@
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
-    padding: 0 15px;
+    padding: 0 15px; /* 左右の余白を確保 */
   }
-  .intro-logo { font-size: clamp(18px, 7vw, 32px); margin-bottom: 12px; width: 100%; overflow: hidden; }
-  .intro-subtitle { font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em; margin-bottom: 35px; }
+  /* スマホではみ出ないようサイズを動的に調整 */
+  .intro-logo { 
+    font-size: clamp(18px, 7vw, 32px); 
+    margin-bottom: 12px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .intro-subtitle {
+    font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em;
+    margin-bottom: 35px;
+  }
   
   .btn-ui-main {
     padding: 18px 45px;
@@ -67,8 +76,14 @@
   #main-page { display: flex; flex-direction: column; }
   #viewer-container { flex: 1; background: #fff; position: relative; }
 
-  .header-logo { position: absolute; top: 20px; left: 25px; z-index: 200; font-size: clamp(10px, 2.5vw, 14px); }
-  .download-area { position: absolute; top: 15px; right: 15px; z-index: 200; }
+  .header-logo {
+    position: absolute; top: 20px; left: 25px; z-index: 200;
+    font-size: clamp(10px, 2.5vw, 14px);
+  }
+
+  .download-area {
+    position: absolute; top: 15px; right: 15px; z-index: 200;
+  }
   .btn-dl-minimal {
     width: 46px; height: 46px; background: #fff; 
     border: 1px solid #ddd; border-radius: 50%;
@@ -109,7 +124,11 @@
   input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #ddd; outline: none; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: #000; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
-  .range-guides { display: flex; justify-content: space-between; margin-top: 8px; font-size: 9px; color: #ccc; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .range-guides {
+    display: flex; justify-content: space-between;
+    margin-top: 8px; font-size: 9px; color: #ccc;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  }
 
   .color-grid { display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 5px; }
   .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); position: relative; }
@@ -117,14 +136,14 @@
   .color-picker-wrapper { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-  /* スマホ版 REGENERATEボタンの調整 */
+  /* REGENERATEボタン スマホ位置調整 */
   .finish-area { 
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 15px; /* 少し下げた */
+    right: 15px;
     z-index: 1000;
   }
-  .btn-regen-mobile {
+  .btn-ui-main.btn-regen-mobile {
     padding: 10px 22px; /* 少し小さく */
     font-size: 9px;
   }
@@ -134,7 +153,7 @@
     #step-panel { padding-top: 22px; height: 280px; }
     .nav-arrow { width: 54px; height: 54px; font-size: 18px; }
     .step-nav { gap: 70px; }
-    .btn-regen-mobile { padding: 14px 44px; font-size: 10px; }
+    .btn-ui-main.btn-regen-mobile { padding: 14px 44px; font-size: 10px; }
   }
 </style>
 </head>
