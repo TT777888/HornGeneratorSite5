@@ -136,38 +136,32 @@
   #steps-container { 
     width: 100%; 
     max-width: 340px; 
-    min-height: 150px; /* ステップ間で高さを固定 */
-    display: flex; align-items: flex-start; justify-content: center; 
+    min-height: 140px; 
+    display: flex; align-items: center; justify-content: center; 
   }
   .step-content { text-align: center; display: none; width: 100%; }
   .step-content.active { display: block; animation: slideUp 0.4s ease forwards; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
   .step-counter { font-size: 8px; color: #aaa; letter-spacing: 0.3em; margin-bottom: 6px; font-weight: 700; }
-  .step-name { font-family: var(--font-logo); font-size: clamp(20px, 6vw, 24px); font-weight: 800; margin-bottom: 25px; letter-spacing: -0.01em; }
+  .step-name { font-family: var(--font-logo); font-size: clamp(20px, 6vw, 24px); font-weight: 800; margin-bottom: 20px; letter-spacing: -0.01em; }
 
-  .slider-wrapper { position: relative; padding: 0 5px; width: 100%; height: 50px; } /* 操作エリアの高さを統一 */
-  input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #ddd; outline: none; margin: 15px 0; }
+  .slider-wrapper { position: relative; padding: 0 5px; width: 100%; }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #ddd; outline: none; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: #000; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
   .range-guides {
     display: flex; justify-content: space-between;
-    margin-top: 5px; font-size: 9px; color: #ccc;
+    margin-top: 10px; font-size: 9px; color: #ccc;
     font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
   }
 
-  /* STEP5 Colorの重心を調整 */
-  .color-grid { 
-    display: flex; gap: clamp(8px, 3vw, 15px); 
-    justify-content: center; align-items: center; 
-    height: 34px; /* スライダー＋ thumbの高さに合わせる */
-    margin: 5px 0 10px 0; 
-  }
+  .color-grid { display: flex; gap: clamp(8px, 3vw, 15px); justify-content: center; align-items: center; height: 34px; margin-top: 10px; }
   .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); position: relative; }
   .color-dot.active { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #000; }
   .color-picker-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-  /* REGENERATEボタン スマホ最適化 */
   .finish-area { 
     position: fixed;
     bottom: 30px; 
@@ -272,7 +266,7 @@
               <div class="color-dot" style="background:#4e4449;" data-color="#4e4449"></div>
               <div class="color-picker-wrapper"><input type="color" id="custom-color" value="#ffffff"></div>
             </div>
-            <div class="range-guides" style="visibility:hidden;"><span>-</span><span>-</span></div>
+            <div class="range-guides" style="visibility: hidden;"><span>-</span><span>-</span></div>
           </div>
         </div>
       </div>
@@ -385,8 +379,10 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
   }
   for (let i = 0; i < segments; i++) {
     for (let j = 0; j < radialSegments; j++) {
-      const a = i*(radialSegments+1)+j, b = (i+1)*(radialSegments+1)+j;
-      const c = (i+1)*(radialSegments+1)+(j+1), d = i*(radialSegments+1)+(j+1);
+      const a = i*(radialSegments+1)+j;
+      const b = (i+1)*(radialSegments+1)+j;
+      const c = (i+1)*(radialSegments+1)+(j+1);
+      const d = i*(radialSegments+1)+(j+1);
       indices.push(a, b, d, b, c, d);
     }
   }
