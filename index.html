@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TSUNO | HORN GENERATOR</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
@@ -39,29 +39,21 @@
     white-space: nowrap;
   }
 
-  /* ── START SCREEN (スマホ最適化) ── */
+  /* ── START SCREEN ── */
   #intro-page {
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
-    padding: 0 15px; /* 左右の余白を確保 */
+    padding: 20px;
   }
-  
-  /* ロゴサイズの動的調整: 最小18px、推奨幅7%、最大32px */
-  .intro-logo { 
-    font-size: clamp(18px, 7vw, 32px); 
-    margin-bottom: 12px;
-    width: 100%;
-    overflow: hidden;
-  }
-  
+  .intro-logo { font-size: clamp(24px, 8vw, 32px); margin-bottom: 15px; }
   .intro-subtitle {
     font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em;
     margin-bottom: 35px;
   }
   
   .btn-ui-main {
-    padding: 18px 45px;
+    padding: 18px 40px;
     background: var(--text-black); border: none;
     color: #fff; cursor: pointer; 
     font-family: var(--font-ui);
@@ -80,14 +72,14 @@
 
   .header-logo {
     position: absolute; top: 20px; left: 20px; z-index: 200;
-    font-size: clamp(10px, 2.5vw, 14px);
+    font-size: clamp(10px, 3vw, 14px);
   }
 
   .download-area {
     position: absolute; top: 15px; right: 15px; z-index: 200;
   }
   .btn-dl-minimal {
-    width: 46px; height: 46px; background: #fff; 
+    width: 48px; height: 48px; background: #fff; 
     border: 1px solid #ddd; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: 0.3s;
@@ -96,36 +88,38 @@
 
   /* STEP PANEL */
   #step-panel {
-    height: 250px; background: var(--panel-bg);
+    height: 260px; background: var(--panel-bg);
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; align-items: center;
-    padding: 15px 10px;
+    padding: 20px 10px;
     z-index: 100;
+    position: relative;
   }
 
   .step-nav {
     display: flex; align-items: center; justify-content: center;
-    gap: 15px; width: 100%; max-width: 800px;
+    gap: 20px; width: 100%; max-width: 850px;
   }
   .nav-arrow {
-    width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd;
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd;
     background: #fff; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; transition: 0.2s; font-size: 14px;
+    justify-content: center; transition: 0.2s; font-size: 16px;
     color: var(--text-black); flex-shrink: 0;
   }
   .nav-arrow.disabled { opacity: 0.1; cursor: default; }
 
   #steps-container { 
     width: 100%; 
-    max-width: 320px; 
-    min-height: 120px; 
+    max-width: 340px; 
+    min-height: 140px; 
     display: flex; align-items: center; justify-content: center; 
   }
   .step-content { text-align: center; display: none; width: 100%; }
   .step-content.active { display: block; animation: slideUp 0.4s ease forwards; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  .step-counter { font-size: 8px; color: #aaa; letter-spacing: 0.3em; margin-bottom: 5px; font-weight: 700; }
-  .step-name { font-family: var(--font-logo); font-size: clamp(18px, 5vw, 24px); font-weight: 800; margin-bottom: 15px; letter-spacing: -0.01em; }
+  .step-counter { font-size: 8px; color: #aaa; letter-spacing: 0.3em; margin-bottom: 6px; font-weight: 700; }
+  .step-name { font-family: var(--font-logo); font-size: clamp(20px, 6vw, 24px); font-weight: 800; margin-bottom: 20px; letter-spacing: -0.01em; }
 
   .slider-wrapper { position: relative; padding: 0 5px; width: 100%; }
   input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #ddd; outline: none; }
@@ -133,14 +127,14 @@
 
   .range-guides {
     display: flex; justify-content: space-between;
-    margin-top: 8px; font-size: 8px; color: #ccc;
+    margin-top: 10px; font-size: 9px; color: #ccc;
     font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
   }
 
-  .color-grid { display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 5px; }
-  .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); position: relative; }
+  .color-grid { display: flex; gap: clamp(8px, 3vw, 15px); justify-content: center; align-items: center; height: 34px; margin-top: 10px; }
+  .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); position: relative; }
   .color-dot.active { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #000; }
-  .color-picker-wrapper { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
+  .color-picker-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
   .finish-area { 
@@ -150,17 +144,10 @@
     justify-content: center;
   }
 
+  /* パソコンで見るときだけ、REGENERATEを右下に固定 */
   @media (min-width: 800px) {
     .finish-area { position: absolute; bottom: 35px; right: 40px; width: auto; }
-    #step-panel { padding-top: 22px; height: 280px; }
-    .nav-arrow { width: 54px; height: 54px; font-size: 18px; }
-    .step-nav { gap: 70px; }
-  }
-
-  /* 非常に狭い画面用の微調整 */
-  @media (max-width: 350px) {
-    .typo-logo { letter-spacing: 0.05em; }
-    .step-nav { gap: 5px; }
+    #step-panel { padding-top: 22px; }
   }
 </style>
 </head>
@@ -190,6 +177,7 @@
   <div id="step-panel">
     <div class="step-nav">
       <button class="nav-arrow disabled" id="prev-btn" onclick="changeStep(-1)">←</button>
+      
       <div id="steps-container">
         <div class="step-content active">
           <p class="step-counter">STEP 01 / 05</p>
@@ -231,14 +219,18 @@
             <div class="color-dot" style="background:#f2f2f2;" data-color="#f2f2f2"></div>
             <div class="color-dot" style="background:#d4a373;" data-color="#d4a373"></div>
             <div class="color-dot" style="background:#4e4449;" data-color="#4e4449"></div>
-            <div class="color-picker-wrapper"><input type="color" id="custom-color" value="#ffffff"></div>
+            <div class="color-picker-wrapper">
+              <input type="color" id="custom-color" value="#ffffff">
+            </div>
           </div>
         </div>
       </div>
+
       <button class="nav-arrow" id="next-btn" onclick="changeStep(1)">→</button>
     </div>
+
     <div class="finish-area">
-      <button class="btn-ui-main" onclick="newDNA()" style="padding: 12px 25px; font-size: 10px;">Regenerate</button>
+      <button class="btn-ui-main" onclick="newDNA()" style="padding: 12px 30px; font-size: 10px;">Regenerate</button>
     </div>
   </div>
 </div>
@@ -272,8 +264,11 @@ window.changeStep = (dir) => {
   steps[currentStep].classList.remove('active');
   currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + dir));
   steps[currentStep].classList.add('active');
-  document.getElementById('prev-btn').classList.toggle('disabled', currentStep === 0);
-  document.getElementById('next-btn').classList.toggle('disabled', currentStep === steps.length - 1);
+  
+  const p = document.getElementById('prev-btn');
+  const n = document.getElementById('next-btn');
+  p.classList.toggle('disabled', currentStep === 0);
+  n.classList.toggle('disabled', currentStep === steps.length - 1);
 };
 
 window.newDNA = () => {
@@ -302,7 +297,7 @@ function initThree() {
   camera.position.set(0, 5, 15);
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(c.clientWidth, c.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(window.devicePixelRatio);
   document.getElementById("three-canvas").appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -316,8 +311,8 @@ function initThree() {
 
 function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale = 1.0, bId = 0) {
   const points = [];
-  const segments = 60; // スマホ負荷軽減のため少し削減
-  const radialSegments = 24;
+  const segments = 80;
+  const radialSegments = 32;
   const len = settings.size * 1.5 * scale;
   const bS = settings.bend * 0.4;
   for (let i = 0; i <= 10; i++) {
@@ -329,15 +324,16 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
   const curve = new THREE.CatmullRomCurve3(points);
   const baseR = (isBranch ? 0.2 : 0.45) * (settings.size*0.08 + 0.9);
   const vertices = [], indices = [], frames = curve.computeFrenetFrames(segments, false);
+
   for (let i = 0; i <= segments; i++) {
     const t = i/segments;
-    const bump = 1 + (Math.sin(t*30)*0.5 + (dna.noise[i%120]-0.5))*(settings.bump*0.04)*(1-t);
+    const bump = 1 + (Math.sin(t*30)*0.5 + (dna.noise[i]-0.5))*(settings.bump*0.04)*(1-t);
     const r = baseR * Math.pow(1-t,0.9)*bump;
     const p = curve.getPointAt(t);
     const n = frames.normals[i], b = frames.binormals[i];
     for (let j = 0; j <= radialSegments; j++) {
       const theta = (j/radialSegments)*Math.PI*2;
-      const v = new THREE.Vector3().copy(p).add(n.clone().multiplyScalar(Math.cos(theta)*r)).add(b.clone().multiplyScalar(Math.sin(theta)*r));
+      const v = new THREE.Vector3().copy(p).add(n.clone().multiplyScalar(Math.cos(theta) * r)).add(b.clone().multiplyScalar(Math.sin(theta) * r));
       vertices.push(v.x, v.y, v.z);
     }
   }
@@ -348,6 +344,14 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
       indices.push(a, b, d, b, c, d);
     }
   }
+  const botIdx = vertices.length/3;
+  const ps = curve.getPointAt(0); vertices.push(ps.x, ps.y, ps.z);
+  for (let j = 0; j < radialSegments; j++) indices.push(botIdx, j+1, j);
+  const topIdx = vertices.length/3;
+  const pe = curve.getPointAt(1); vertices.push(pe.x, pe.y, pe.z);
+  const lastRing = segments*(radialSegments+1);
+  for (let j = 0; j < radialSegments; j++) indices.push(topIdx, lastRing+j, lastRing+j+1);
+
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geo.setIndex(indices);
@@ -379,7 +383,12 @@ function animate() {
 
 ['size', 'bend', 'bump', 'branch'].forEach(id => {
   const el = document.getElementById('i-' + id);
-  if (el) el.oninput = (e) => { settings[id] = parseInt(e.target.value); updateModel(); };
+  if (el) {
+    el.oninput = (e) => {
+      settings[id] = parseInt(e.target.value);
+      updateModel();
+    };
+  }
 });
 
 document.getElementById('palette').onclick = (e) => {
