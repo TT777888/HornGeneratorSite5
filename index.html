@@ -36,6 +36,7 @@
   .typo-logo {
     font-family: var(--font-logo);
     font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+    line-height: 1.1;
   }
 
   /* ── START SCREEN ── */
@@ -43,19 +44,23 @@
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 30px; /* 左右の余白を少し広めに */
   }
   
-  /* スマホ版ロゴ: 2行に改行、PC版ロゴ: 1行 */
+  /* スマホ版ロゴ修正: 強制中央揃え + 改行許可 */
   .intro-logo { 
-    font-size: clamp(28px, 10vw, 32px); 
-    line-height: 1.1;
+    font-size: clamp(24px, 11vw, 32px); 
     margin-bottom: 15px; 
-    white-space: normal; /* スマホで改行を許可 */
-    max-width: 250px;    /* 改行を促すための幅制限 */
+    white-space: normal; /* 折り返しを許可 */
+    word-wrap: break-word;
+    text-align: center;
+    width: 100%;
+    max-width: 320px; /* 画面内での最大幅を制限して中央に寄せる */
     margin-left: auto;
     margin-right: auto;
+    display: block;
   }
+  
   @media (min-width: 800px) {
     .intro-logo { 
       font-size: 32px; 
@@ -66,7 +71,7 @@
 
   .intro-subtitle {
     font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em;
-    margin-bottom: 35px;
+    margin-bottom: 45px;
   }
   
   .btn-ui-main {
@@ -155,7 +160,7 @@
   .color-picker-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-  /* REGENERATEボタン スマホ最適化 (中央下・若干上) */
+  /* REGENERATEボタン スマホ最適化: 中央下・少し上 */
   .finish-area { 
     position: fixed;
     bottom: 30px; 
@@ -180,7 +185,6 @@
       right: 40px; 
       left: auto; 
       transform: none; 
-      width: auto; 
     }
     .btn-regen-mobile { padding: 14px 44px; font-size: 10px; }
     .header-logo { top: 25px; left: 30px; }
