@@ -35,38 +35,38 @@
   /* ── TYPOGRAPHY ── */
   .typo-logo {
     font-family: var(--font-logo);
-    font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 800; text-transform: uppercase;
     line-height: 1.1;
   }
 
-  /* ── START SCREEN ── */
+  /* ── START SCREEN (スマホで確実にはみ出さない設定) ── */
   #intro-page {
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 10px;
   }
   
-  /* スマホ版ロゴ修正: 2行に収まるようサイズと幅を調整 */
   .intro-logo { 
-    font-size: clamp(22px, 9vw, 32px); /* 最小値を少し下げて推奨値を調整 */
+    display: flex;
+    flex-direction: column; /* HORNとGENERATORを縦に並べる */
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(20px, 8vw, 32px); /* GENERATORが収まるサイズ */
     margin-bottom: 15px; 
-    white-space: normal;
     text-align: center;
     width: 100%;
-    max-width: 280px; /* 3行にならないよう少し広げた */
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    letter-spacing: 0.05em; /* スマホでは少し詰めて収まりを良くする */
+    letter-spacing: 0.05em; /* スマホでは間隔を少し詰める */
   }
   
+  /* PCでは1行に戻す */
   @media (min-width: 800px) {
     .intro-logo { 
+      flex-direction: row; 
+      gap: 0.3em;
       font-size: 32px; 
-      white-space: nowrap; 
-      max-width: none;
       letter-spacing: 0.1em;
+      white-space: nowrap;
     }
   }
 
@@ -97,6 +97,7 @@
     position: absolute; top: 20px; left: 20px; z-index: 200;
     font-size: clamp(10px, 2.5vw, 14px);
     white-space: nowrap;
+    font-family: var(--font-logo); font-weight: 800; text-transform: uppercase;
   }
 
   .download-area {
@@ -141,9 +142,10 @@
   }
   .step-content { text-align: center; display: none; width: 100%; }
   .step-content.active { display: block; animation: slideUp 0.4s ease forwards; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
   .step-counter { font-size: 8px; color: #aaa; letter-spacing: 0.3em; margin-bottom: 6px; font-weight: 700; }
-  .step-name { font-family: var(--font-logo); font-size: clamp(20px, 6vw, 24px); font-weight: 800; margin-bottom: 20px; letter-spacing: -0.01em; }
+  .step-name { font-family: var(--font-logo); font-size: clamp(20px, 6vw, 24px); font-weight: 800; margin-bottom: 20px; letter-spacing: -0.01em; text-transform: uppercase; }
 
   .slider-wrapper { position: relative; padding: 0 5px; width: 100%; }
   input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #ddd; outline: none; }
@@ -161,7 +163,7 @@
   .color-picker-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-  /* REGENERATEボタン スマホ配置 */
+  /* REGENERATEボタン スマホ: 中央寄せ・位置微調整 */
   .finish-area { 
     position: fixed;
     bottom: 30px; 
@@ -196,14 +198,17 @@
 <body>
 
 <div id="intro-page" class="page active">
-  <div class="intro-logo typo-logo">Horn Generator</div>
+  <div class="intro-logo typo-logo">
+    <span>HORN</span>
+    <span>GENERATOR</span>
+  </div>
   <div class="intro-subtitle">Produced By Shachihata Inc.</div>
-  <button class="btn-ui-main" onclick="startApp()">Start Generating</button>
+  <button class="btn-ui-main" onclick="startApp()">START GENERATING</button>
 </div>
 
 <div id="main-page" class="page">
   <div id="viewer-container">
-    <div class="header-logo typo-logo">Horn Generator</div>
+    <div class="header-logo typo-logo">HORN GENERATOR</div>
     <div class="download-area">
       <button class="btn-dl-minimal" onclick="downloadModel()" title="Download .obj">
         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -219,7 +224,6 @@
   <div id="step-panel">
     <div class="step-nav">
       <button class="nav-arrow disabled" id="prev-btn" onclick="changeStep(-1)">←</button>
-      
       <div id="steps-container">
         <div class="step-content active">
           <p class="step-counter">STEP 01 / 05</p>
@@ -261,18 +265,14 @@
             <div class="color-dot" style="background:#f2f2f2;" data-color="#f2f2f2"></div>
             <div class="color-dot" style="background:#d4a373;" data-color="#d4a373"></div>
             <div class="color-dot" style="background:#4e4449;" data-color="#4e4449"></div>
-            <div class="color-picker-wrapper">
-              <input type="color" id="custom-color" value="#ffffff">
-            </div>
+            <div class="color-picker-wrapper"><input type="color" id="custom-color" value="#ffffff"></div>
           </div>
         </div>
       </div>
-
       <button class="nav-arrow" id="next-btn" onclick="changeStep(1)">→</button>
     </div>
-
     <div class="finish-area">
-      <button class="btn-ui-main btn-regen-mobile" onclick="newDNA()">Regenerate</button>
+      <button class="btn-ui-main btn-regen-mobile" onclick="newDNA()">REGENERATE</button>
     </div>
   </div>
 </div>
@@ -306,11 +306,8 @@ window.changeStep = (dir) => {
   steps[currentStep].classList.remove('active');
   currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + dir));
   steps[currentStep].classList.add('active');
-  
-  const p = document.getElementById('prev-btn');
-  const n = document.getElementById('next-btn');
-  p.classList.toggle('disabled', currentStep === 0);
-  n.classList.toggle('disabled', currentStep === steps.length - 1);
+  document.getElementById('prev-btn').classList.toggle('disabled', currentStep === 0);
+  document.getElementById('next-btn').classList.toggle('disabled', currentStep === steps.length - 1);
 };
 
 window.newDNA = () => {
@@ -417,17 +414,13 @@ function animate() {
 
 ['size', 'bend', 'bump', 'branch'].forEach(id => {
   const el = document.getElementById('i-' + id);
-  if (el) {
-    el.oninput = (e) => {
-      settings[id] = parseInt(e.target.value);
-      updateModel();
-    };
-  }
+  if (el) el.oninput = (e) => { settings[id] = parseInt(e.target.value); updateModel(); };
 });
 
 document.getElementById('palette').onclick = (e) => {
   if (e.target.classList.contains('color-dot')) {
-    document.querySelector('.color-dot.active')?.classList.remove('active');
+    const activeDot = document.querySelector('.color-dot.active');
+    if (activeDot) activeDot.classList.remove('active');
     e.target.classList.add('active');
     settings.color = e.target.dataset.color;
     updateModel();
@@ -435,7 +428,8 @@ document.getElementById('palette').onclick = (e) => {
 };
 
 document.getElementById('custom-color').oninput = (e) => {
-  document.querySelector('.color-dot.active')?.classList.remove('active');
+  const activeDot = document.querySelector('.color-dot.active');
+  if (activeDot) activeDot.classList.remove('active');
   settings.color = e.target.value;
   updateModel();
 };
