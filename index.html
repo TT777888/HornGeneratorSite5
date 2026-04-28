@@ -39,20 +39,22 @@
     white-space: nowrap;
   }
 
-  /* ── START SCREEN ── */
+  /* ── START SCREEN (スマホ最適化) ── */
   #intro-page {
     background: var(--bg-white);
     justify-content: center; align-items: center;
     text-align: center;
     padding: 0 15px; /* 左右の余白を確保 */
   }
-  /* スマホではみ出ないようサイズを動的に調整 */
+  
+  /* ロゴサイズの動的調整: 最小18px、推奨幅7%、最大32px */
   .intro-logo { 
     font-size: clamp(18px, 7vw, 32px); 
     margin-bottom: 12px;
     width: 100%;
     overflow: hidden;
   }
+  
   .intro-subtitle {
     font-size: clamp(10px, 3vw, 13px); color: #888; letter-spacing: 0.25em;
     margin-bottom: 35px;
@@ -77,7 +79,7 @@
   #viewer-container { flex: 1; background: #fff; position: relative; }
 
   .header-logo {
-    position: absolute; top: 20px; left: 25px; z-index: 200;
+    position: absolute; top: 20px; left: 20px; z-index: 200;
     font-size: clamp(10px, 2.5vw, 14px);
   }
 
@@ -113,7 +115,12 @@
   }
   .nav-arrow.disabled { opacity: 0.1; cursor: default; }
 
-  #steps-container { width: 100%; max-width: 320px; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+  #steps-container { 
+    width: 100%; 
+    max-width: 320px; 
+    min-height: 120px; 
+    display: flex; align-items: center; justify-content: center; 
+  }
   .step-content { text-align: center; display: none; width: 100%; }
   .step-content.active { display: block; animation: slideUp 0.4s ease forwards; }
 
@@ -126,7 +133,7 @@
 
   .range-guides {
     display: flex; justify-content: space-between;
-    margin-top: 8px; font-size: 9px; color: #ccc;
+    margin-top: 8px; font-size: 8px; color: #ccc;
     font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
   }
 
@@ -136,24 +143,24 @@
   .color-picker-wrapper { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red); position: relative; overflow: hidden; }
   #custom-color { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-  /* REGENERATEボタン スマホ位置調整 */
   .finish-area { 
-    position: fixed;
-    bottom: 15px; /* 少し下げた */
-    right: 15px;
-    z-index: 1000;
-  }
-  .btn-ui-main.btn-regen-mobile {
-    padding: 10px 22px; /* 少し小さく */
-    font-size: 9px;
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   @media (min-width: 800px) {
-    .finish-area { position: absolute; bottom: 35px; right: 40px; }
+    .finish-area { position: absolute; bottom: 35px; right: 40px; width: auto; }
     #step-panel { padding-top: 22px; height: 280px; }
     .nav-arrow { width: 54px; height: 54px; font-size: 18px; }
     .step-nav { gap: 70px; }
-    .btn-ui-main.btn-regen-mobile { padding: 14px 44px; font-size: 10px; }
+  }
+
+  /* 非常に狭い画面用の微調整 */
+  @media (max-width: 350px) {
+    .typo-logo { letter-spacing: 0.05em; }
+    .step-nav { gap: 5px; }
   }
 </style>
 </head>
@@ -231,7 +238,7 @@
       <button class="nav-arrow" id="next-btn" onclick="changeStep(1)">→</button>
     </div>
     <div class="finish-area">
-      <button class="btn-ui-main btn-regen-mobile" onclick="newDNA()">Regenerate</button>
+      <button class="btn-ui-main" onclick="newDNA()" style="padding: 12px 25px; font-size: 10px;">Regenerate</button>
     </div>
   </div>
 </div>
@@ -309,7 +316,7 @@ function initThree() {
 
 function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale = 1.0, bId = 0) {
   const points = [];
-  const segments = 60;
+  const segments = 60; // スマホ負荷軽減のため少し削減
   const radialSegments = 24;
   const len = settings.size * 1.5 * scale;
   const bS = settings.bend * 0.4;
