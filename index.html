@@ -123,7 +123,7 @@
   .step-nav {
     display: flex; align-items: center; justify-content: center;
     gap: clamp(10px, 4vw, 20px);
-    width: 100%; max-width: 900px; /* PCでの広がりを許容 */
+    width: 100%; max-width: 900px;
   }
   .nav-arrow {
     width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd;
@@ -192,18 +192,17 @@
   }
 
   @media (min-width: 800px) {
-    /* PC版: パラメータ部分を全体的に大きく調整 */
     #steps-container { 
-      max-width: 400px; /* スライダーの幅を拡大 */
-      margin-top: 15px; /* 位置をさらに若干下げてバランス調整 */
+      max-width: 400px; 
+      margin-top: 15px; 
     }
     .step-counter { font-size: 10px; margin-bottom: 8px; }
-    .step-name { font-size: 32px; margin-bottom: 25px; } /* ステップ名を拡大 */
-    .range-guides { font-size: 11px; } /* ガイドテキストを拡大 */
+    .step-name { font-size: 32px; margin-bottom: 25px; } 
+    .range-guides { font-size: 11px; } 
     
-    .step-nav { gap: 80px; } /* 矢印の間隔を少し広げる */
+    .step-nav { gap: 80px; } 
     .nav-arrow { width: 54px; height: 54px; font-size: 18px; }
-    #step-panel { padding-top: 25px; height: 300px; } /* パネル全体の高さも微増 */
+    #step-panel { padding-top: 22px; height: 280px; } 
     
     .finish-area { 
       position: absolute; 
@@ -276,8 +275,8 @@
           <p class="step-counter">STEP 04 / 05</p>
           <p class="step-name">BRANCHES</p>
           <div class="slider-wrapper">
-            <input id="i-branch" type="range" min="1" max="5" value="1">
-            <div class="range-guides"><span>0</span><span>5</span></div>
+            <input id="i-branch" type="range" min="0" max="4" value="0">
+            <div class="range-guides"><span>0</span><span>4</span></div>
           </div>
         </div>
         <div class="step-content">
@@ -317,7 +316,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJExporter } from "three/addons/exporters/OBJExporter.js";
 
-let settings = { size: 3, bend: 3, bump: 3, branch: 1, color: "#ffffff" };
+// 初期枝数を0に設定
+let settings = { size: 3, bend: 3, bump: 3, branch: 0, color: "#ffffff" };
 let dna = { seedX: Math.random()*5, seedZ: Math.random()*5, noise: Array.from({length: 120}, () => Math.random()) };
 let currentStep = 0;
 
@@ -382,8 +382,8 @@ function createSolidHorn(isBranch = false, startPos = new THREE.Vector3(), scale
   const bS = settings.bend * 0.4;
   for (let i = 0; i <= 10; i++) {
     const t = i/10;
-    let x = !isBranch ? Math.sin(t*Math.PI*0.4 + dna.seedX)*bS*t*2.5 : Math.cos((bId/settings.branch)*Math.PI*2 + dna.seedX)*(t*2.2);
-    let z = !isBranch ? Math.cos(t*Math.PI*0.4 + dna.seedZ)*bS*t*2.5 : Math.sin((bId/settings.branch)*Math.PI*2 + dna.seedX)*(t*2.2);
+    let x = !isBranch ? Math.sin(t*Math.PI*0.4 + dna.seedX)*bS*t*2.5 : Math.cos((bId/4)*Math.PI*2 + dna.seedX)*(t*2.2);
+    let z = !isBranch ? Math.cos(t*Math.PI*0.4 + dna.seedZ)*bS*t*2.5 : Math.sin((bId/4)*Math.PI*2 + dna.seedX)*(t*2.2);
     points.push(new THREE.Vector3(x, t*len, z).add(startPos));
   }
   const curve = new THREE.CatmullRomCurve3(points);
@@ -439,8 +439,8 @@ function updateModel() {
   }
   const main = createSolidHorn();
   hornGroup.add(main.mesh);
-  for (let i = 0; i < settings.branch-1; i++) {
-    hornGroup.add(createSolidHorn(true, main.curve.getPointAt(0.2+i*0.2), 0.5, i).mesh);
+  for (let i = 0; i < settings.branch; i++) {
+    hornGroup.add(createSolidHorn(true, main.curve.getPointAt(0.25+i*0.15), 0.5, i+1).mesh);
   }
   const box = new THREE.Box3().setFromObject(hornGroup);
   const center = new THREE.Vector3(); box.getCenter(center);
